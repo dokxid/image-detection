@@ -36,6 +36,7 @@ def get_state(needle_path):
 		screenshot = cv.imread("monitor.png")
 		needle = cv.imread(needle_path)
 		
+	# TODO: debug flag
 	if debug:
 		# generate result for debug
 		res = cv.matchTemplate(screenshot, needle, cv.TM_CCOEFF_NORMED)
@@ -55,10 +56,10 @@ def get_state(needle_path):
 		plt.title("result")
 		plt.imshow(cv.cvtColor(img, cv.IMREAD_GRAYSCALE))
 		plt.show()
-
-
+		
+		
 if __name__ == '__main__':
 	debug = True
 	get_state("images/equipment.png")
-	print(pytesseract.image_to_string(Image.open('monitor.png')))
+	# print(pts.image_to_string(Image.open('monitor.png')))
 	

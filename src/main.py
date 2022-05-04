@@ -1,11 +1,9 @@
 # imports
-import detection_mss
-
-
-def main_loop():
-    a = 1
+import pyautogui
 
 
 if __name__ == '__main__':
-    main_loop()
+    a = "oihjngsdfoignsdoghi"
+    print(a)
+    
 
