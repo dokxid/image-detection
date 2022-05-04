@@ -1,7 +1,7 @@
 import mss
 import cv2 as cv
 import pyautogui
-import pytesseract
+import pytesseract as pt
 import numpy as np
 from PIL import Image
 from matplotlib import pyplot as plt
