@@ -84,30 +84,31 @@ def get_state(needle_path):
         screenshot = cv.imread("monitor.png")
         needle = cv.imread(needle_path)
     
-    # TODO: debug flag
+    # generate result
+    res = cv.matchTemplate(screenshot, needle, cv.TM_CCOEFF_NORMED)
+    result = MatchResult(cv.minMaxLoc(res), needle)
+    draw_result(screenshot, result, needle_path)
     if debug:
-        # generate result for debug
-        res = cv.matchTemplate(screenshot, needle, cv.TM_CCOEFF_NORMED)
-        result = MatchResult(cv.minMaxLoc(res), needle)
-        draw_result(screenshot, result, needle_path)
+        print("comparing screenshot with %s" % needle_path)
+        print(cv.minMaxLoc(res))
         cv.imwrite('result.png', screenshot)
-        
-        # plot result for debug
-        canvas = np.zeros((screenshot.shape[0], screenshot.shape[1]), np.uint8)
-        plt.figure(figsize=(16, 12))
-        img = mpimg.imread("result.png")
-        plt.imshow(img)
-        plt.axis('on')
-        plt.title("result")
-        plt.imshow(cv.cvtColor(img, cv.IMREAD_GRAYSCALE))
-        plt.show()
-        
-        plt.figure(figsize=(7, 5))
-        names = ['group_a', 'group_b', 'group_c']
-        values = [1, 10, 100]
-        # plt.bar(needle_path, str(int(max_val * 100)))
-        plt.barh(names, values)
-        plt.show()
+    
+    # plot result for debug
+    canvas = np.zeros((screenshot.shape[0], screenshot.shape[1]), np.uint8)
+    plt.figure(figsize=(16, 12))
+    img = mpimg.imread("result.png")
+    plt.imshow(img)
+    plt.axis('on')
+    plt.title("result")
+    plt.imshow(cv.cvtColor(img, cv.IMREAD_GRAYSCALE))
+    plt.show()
+    
+    plt.figure(figsize=(7, 5))
+    names = ['group_a', 'group_b', 'group_c']
+    values = [1, 10, 100]
+    # plt.bar(needle_path, str(int(max_val * 100)))
+    plt.barh(names, values)
+    plt.show()
 
 
 if __name__ == '__main__':
