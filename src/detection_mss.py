@@ -38,6 +38,11 @@ class MatchResult(object):
 
 
 def take_screenshot():
+    """
+    takes a screenshot of monitor
+    TODO: hardcoded monitor, image to cv2 file?
+    :return: image in PIL
+    """
     with mss.mss() as sct:
         # grab screenshot
         sct_image = sct.grab(sct.monitors[1])
