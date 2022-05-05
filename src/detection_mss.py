@@ -77,29 +77,12 @@ def draw_result(haystack, result, needle_path):
     )
 
 
-def get_state(needle_path):
-    # get images for matchTemplate
-    if debug:
-        take_screenshot()
-        needle_path = "images/equipment.png"
-        screenshot = cv.imread("monitor.png")
-        needle = cv.imread(needle_path)
-    else:
-        take_screenshot()
-        screenshot = cv.imread("monitor.png")
-        needle = cv.imread(needle_path)
-    
-    # generate result
-    res = cv.matchTemplate(screenshot, needle, cv.TM_CCOEFF_NORMED)
-    result = MatchResult(cv.minMaxLoc(res), needle)
-    draw_result(screenshot, result, needle_path)
-    if debug:
-        print("comparing screenshot with %s" % needle_path)
-        print(cv.minMaxLoc(res))
-        cv.imwrite('result.png', screenshot)
-    
-    # plot result for debug
-    canvas = np.zeros((screenshot.shape[0], screenshot.shape[1]), np.uint8)
+def plot_result(haystack):
+    """
+    plot result for debug
+    :param haystack: image for render
+    """
+    canvas = np.zeros((haystack.shape[0], haystack.shape[1]), np.uint8)
     plt.figure(figsize=(16, 12))
     img = mpimg.imread("result.png")
     plt.imshow(img)
@@ -114,6 +97,26 @@ def get_state(needle_path):
     # plt.bar(needle_path, str(int(max_val * 100)))
     plt.barh(names, values)
     plt.show()
+
+
+def get_state(needle_path):
+    
+    # get images for matchTemplate
+    if debug:
+        needle_path = "images/equipment.png"
+    take_screenshot()
+    screenshot = cv.imread("monitor.png")
+    needle = cv.imread(needle_path)
+    
+    # generate result
+    res = cv.matchTemplate(screenshot, needle, cv.TM_CCOEFF_NORMED)
+    result = MatchResult(cv.minMaxLoc(res), needle)
+    if debug:
+        draw_result(screenshot, result, needle_path)
+        print("comparing screenshot with %s" % needle_path)
+        print(cv.minMaxLoc(res))
+        cv.imwrite('result.png', screenshot)
+        plot_result(screenshot)
 
 
 if __name__ == '__main__':
