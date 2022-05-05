@@ -19,16 +19,22 @@ class MatchResult(object):
         self.min_val = match_results[0]
         self.max_val = match_results[1]
         self.min_loc = match_results[2]
-        self.max_loc = match_results[3]
-        self.top_left = self.max_loc
+        self.top_left = match_results[3]
         self.bottom_right = (self.top_left[0] + needle.shape[1], self.top_left[1] + needle.shape[0])
-        
+    
     def percent_string(self) -> str:
         """
         returns string for less clutter in plots
         :return: percent as string with no float
         """
         return str(int(self.max_val * 100))
+    
+    def match(self) -> bool:
+        """
+        returns true if match is over set %
+        :return: match bool
+        """
+        return True if self.max_val > 0.99 else False
 
 
 def take_screenshot():
@@ -44,6 +50,26 @@ def take_screenshot():
         image.save(output)
         
         return image
+
+
+def draw_result(haystack, result, needle_path):
+    """
+    draws rectangles on haystack image with the name and percentage of given needle image
+    :param haystack: original image
+    :param result: result of type MatchResult
+    :param needle_path: name of file
+    """
+    cv.rectangle(
+        haystack,
+        result.top_left, result.bottom_right,
+        (0, 255, 0), 2
+    )
+    cv.putText(
+        haystack,
+        (needle_path + " " + result.percent_string() + "%"),
+        (result.top_left[0], result.top_left[1] - 10),
+        cv.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2
+    )
 
 
 def get_state(needle_path):
@@ -63,18 +89,7 @@ def get_state(needle_path):
         # generate result for debug
         res = cv.matchTemplate(screenshot, needle, cv.TM_CCOEFF_NORMED)
         result = MatchResult(cv.minMaxLoc(res), needle)
-        print(result.min_val, result.max_val, result.min_loc, result.max_loc)
-        cv.rectangle(
-            screenshot,
-            result.top_left, result.bottom_right,
-            (0, 255, 0), 2
-        )
-        cv.putText(
-            screenshot,
-            (needle_path + " " + result.percent_string() + "%"),
-            (result.top_left[0], result.top_left[1] - 10),
-            cv.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2
-        )
+        draw_result(screenshot, result, needle_path)
         cv.imwrite('result.png', screenshot)
         
         # plot result for debug
